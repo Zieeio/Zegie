@@ -1,4 +1,4 @@
-.. image:: https://images.unsplash.com/photo-1650999344693-b76317f7b9ae
+.. image:: https://images.unsplash.com/photo-1720214655750-c400b75fcfa2
   :width: 700
   :alt: Zegie - AI System to Streamlines Content Creation for Marketers and Creators
 
