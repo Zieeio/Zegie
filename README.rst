@@ -23,16 +23,4 @@
 Zegie
 =====
 
-**AI System to Streamlines Content Creation for Marketers and Creators**
-
-Support
--------
-
-* Documentation: https://github.com/clivern/zegie/
-* Issues: https://github.com/clivern/zegie/issues
-* Email: hello@clivern.com
-
-Changelog
----------
-
-See `CHANGELOG.rst` for a detailed history of changes.
+AI SDK to Streamlines Content Creation for Marketers and Creators.
