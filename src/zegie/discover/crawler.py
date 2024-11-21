@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import asyncio
 from typing import List
+from langchain_community.document_loaders import WebBaseLoader
 from .brand import Brand
 
 
@@ -36,7 +38,70 @@ class Crawler:
         self.max_chunk_length = max_chunk_length
 
     def crawl(self, brand: Brand) -> List[str]:
-        """Crawl the brand's website and extract the content."""
-        # This will use async to crawl the website and extract the content.
-        # and return content chunks that is semantically meaningful.
-        pass
+        """
+        Crawl the brand's website and extract the content.
+
+        Args:
+            brand: Brand instance containing website URL and links to crawl.
+
+        Returns:
+            List of semantically meaningful content chunks.
+        """
+        return asyncio.run(self._async_crawl(brand))
+
+    async def _async_crawl(self, brand: Brand) -> List[str]:
+        """
+        Async implementation of the crawl method.
+
+        Args:
+            brand: Brand instance containing website URL and links to crawl.
+
+        Returns:
+            List of semantically meaningful content chunks.
+        """
+        urls = [brand.website_url]
+        if brand.links:
+            urls.extend(brand.links)
+
+        chunks = []
+        tasks = [self._load_document(url) for url in urls]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        for result in results:
+            if result:
+                chunks.extend(self._chunk_content(result))
+
+        return chunks
+
+    async def _load_document(self, url: str) -> str:
+        """
+        Load a document from a URL using langchain WebBaseLoader.
+
+        Args:
+            url: URL to load.
+
+        Returns:
+            Extracted text content from the page.
+        """
+        try:
+            loader = WebBaseLoader(url)
+            documents = await asyncio.to_thread(loader.load)
+            extracted_content = "\n\n".join([doc.page_content for doc in documents])
+            return extracted_content
+        except Exception:
+            return ""
+
+    def _chunk_content(self, content: str) -> List[str]:
+        """
+        Split content into semantically meaningful chunks.
+
+        Args:
+            content: Raw text content to chunk.
+
+        Returns:
+            List of content chunks.
+        """
+        if not content or content == "":
+            return []
+        # TODO: Implement chunking logic here.
+        return [content]
