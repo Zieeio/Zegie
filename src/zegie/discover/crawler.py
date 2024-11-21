@@ -25,18 +25,25 @@ class Crawler:
     def __init__(
         self,
         timeout: int = 30,
-        max_chunk_length: int = 10000,
-        chunk_size: int = 1000,
-        chunk_overlap: int = 200,
+        max_chunk_length: int = 50000,
+        chunk_size: int = 1500,
+        chunk_overlap: int = 300,
     ):
         """
         Initialize the Crawler.
 
         Args:
             timeout: Request timeout in seconds.
-            max_chunk_length: Maximum content length to extract.
-            chunk_size: Maximum size of chunks to split text into.
-            chunk_overlap: Overlap between chunks to maintain context.
+            max_chunk_length: Maximum content length to extract per page before truncation.
+                             Higher values allow more content but use more memory.
+                             Default: 50000 characters (~10-15 pages of text).
+            chunk_size: Maximum size of chunks to split text into (in characters).
+                        Recommended range: 1000-2000 for most LLM embeddings.
+                        Default: 1500 characters.
+            chunk_overlap: Overlap between chunks to maintain context (in characters).
+                           Typically 10-20% of chunk_size. Prevents losing context
+                           at chunk boundaries.
+                           Default: 300 characters (20% of chunk_size).
         """
         self.timeout = timeout
         self.max_chunk_length = max_chunk_length
