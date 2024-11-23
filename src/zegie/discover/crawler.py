@@ -15,7 +15,7 @@
 import asyncio
 from typing import List
 from .brand import Brand
-from zegie.scraper import Webbase
+from zegie.scraper import Webbase as WebbaseScraper
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
@@ -24,7 +24,7 @@ class Crawler:
 
     def __init__(
         self,
-        webbase: Webbase,
+        webbase_scraper: WebbaseScraper,
         timeout: int = 30,
         max_chunk_length: int = 50000,
         chunk_size: int = 2000,
@@ -34,8 +34,8 @@ class Crawler:
         Initialize the Crawler.
 
         Args:
-            webbase: Webbase scraper instance to use for scraping URLs.
-            timeout: Request timeout in seconds.
+            webbase_scraper: WebbaseScraper scraper instance to use for scraping URLs.
+            timeout: Request timeout in seconds. Default: 30.
             max_chunk_length: Maximum content length to extract per page before truncation.
                              Higher values allow more content but use more memory.
                              Default: 50000 characters (~10-15 pages of text).
@@ -44,10 +44,9 @@ class Crawler:
                         Default: 2000 characters for better context preservation.
             chunk_overlap: Overlap between chunks to maintain context (in characters).
                            Typically 15-25% of chunk_size. Prevents losing context
-                           at chunk boundaries.
-                           Default: 400 characters (20% of chunk_size).
+                           at chunk boundaries. Default: 400 characters (20% of chunk_size).
         """
-        self.webbase = webbase
+        self.webbase_scraper = webbase_scraper
         self.timeout = timeout
         self.max_chunk_length = max_chunk_length
         self.text_splitter = RecursiveCharacterTextSplitter(
@@ -104,7 +103,8 @@ class Crawler:
         """
         try:
             content = await asyncio.wait_for(
-                asyncio.to_thread(self.webbase.scrape, url), timeout=self.timeout
+                asyncio.to_thread(self.webbase_scraper.scrape, url),
+                timeout=self.timeout,
             )
             return content
         except Exception:

@@ -15,19 +15,20 @@
 import os
 from zegie.post import PostFromLink
 from zegie.post import PostFromTopic
-from zegie.scraper import Webbase
+from zegie.scraper import Webbase as WebbaseScraper
 
 
 def main():
     generator_from_link = PostFromLink(
+        webbase_scraper=WebbaseScraper(
+            scraper_url="http://127.0.0.1:8000",
+            api_key="xkey",
+        ),
         api_key=os.getenv("COHERE_API_KEY"),
         model="command-r7b-12-2024",
         temperature=0.7,
         base_url="https://api.cohere.ai/compatibility/v1",
-        webbase=Webbase(
-            scraper_url="http://127.0.0.1:8000",
-            api_key="xkey",
-        ),
+        max_content_length=8000,
     )
     result = generator_from_link.generate(
         "https://ziee.io",

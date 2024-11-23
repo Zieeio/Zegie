@@ -14,7 +14,7 @@
 
 from typing import Dict, Any
 from langchain_openai import ChatOpenAI
-from zegie.scraper import Webbase
+from zegie.scraper import Webbase as WebbaseScraper
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -24,20 +24,24 @@ class PostFromLink:
 
     def __init__(
         self,
+        webbase_scraper: WebbaseScraper,
         api_key: str,
         model: str = "gpt-5.2",
         temperature: float = 0.7,
         base_url: str = "https://api.openai.com/v1",
-        webbase: Webbase = None,
+        max_content_length: int = 8000,
     ):
         """
         Initialize the PostFromLink.
 
         Args:
+            webbase_scraper: WebbaseScraper scraper instance to use for scraping URLs.
             api_key: API key (OpenAI or Cohere).
             model: Model name to use for generation.
             temperature: Temperature for generation (0.0 to 2.0).
             base_url: Base URL for the API.
+            max_content_length: Maximum content length to use from scraped page (in characters).
+                               Content exceeding this limit will be truncated. Default: 8000.
         """
         kwargs = {
             "openai_api_key": api_key,
@@ -46,7 +50,8 @@ class PostFromLink:
             "base_url": base_url,
         }
         self.llm = ChatOpenAI(**kwargs)
-        self.webbase = webbase
+        self.webbase_scraper = webbase_scraper
+        self.max_content_length = max_content_length
 
     def generate(self, url: str, user_prompt: str) -> Dict[str, Any]:
         """
@@ -61,10 +66,10 @@ class PostFromLink:
             Dictionary with 'content' (str) and 'token_usage' (dict with 'prompt_tokens',
             'completion_tokens', 'total_tokens').
         """
-        content = self.webbase.scrape(url)
+        content = self.webbase_scraper.scrape(url)
 
-        if len(content) > 8000:
-            content = content[:8000] + "..."
+        if len(content) > self.max_content_length:
+            content = content[: self.max_content_length] + "..."
 
         prompt = ChatPromptTemplate.from_messages(
             [
