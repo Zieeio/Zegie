@@ -16,7 +16,10 @@ import requests
 
 
 class Webbase:
-    """Webbase scraper."""
+    """
+    Webbase scraper.
+    https://github.com/Zieeio/Scraper
+    """
 
     def __init__(self, scraper_url: str, api_key: str):
         """

@@ -12,26 +12,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 from zegie.discover import Brand, Crawler
+from zegie.scraper import Webbase
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 
 def main():
     brand = Brand(
-        name="Example Tech Company",
+        name="Clivern",
         industry="Technology",
-        description="A leading technology company specializing in AI and cloud solutions",
-        website_url="https://www.example.com",
+        description="Software Engineer and Occasional Writer. I write about Web APIs, PHP, Python, Go, Java, Rust, Elixir, Software Architecture, Resilience, Automation, AI, DevOps ... etc",
+        website_url="https://clivern.com/",
         links=[
-            "https://www.example.com/about",
-            "https://www.example.com/products",
+            "https://clivern.com/about/",
+            "https://clivern.com/sponsor/",
+            "https://clivern.com/privacy-policy/",
         ],
     )
-
-    brand.add_link("https://www.example.com/blog")
+    brand.add_link("https://clivern.com/contact/")
     brand.add_links(
         [
-            "https://www.example.com/contact",
-            "https://www.example.com/careers",
+            "https://clivern.com/how-to-internationalize-your-wordpress-plugin/",
+            "https://clivern.com/how-to-make-http-requests-with-wordpress/",
+            "https://clivern.com/laravel-routing/",
+            "https://clivern.com/working-with-wordpress-shortcodes/",
+            "https://clivern.com/how-to-schedule-events-using-wordpress-cron/",
+            "https://clivern.com/docker-in-a-nutshell/",
+            "https://clivern.com/kubernetes-deployment-in-a-nutshell/",
+            "https://clivern.com/building-my-own-rag-with-openai-qdrant-and-langchain/",
+            "https://clivern.com/understanding-opentelemetry-distributed-tracing/",
+            "https://clivern.com/load-testing-with-k6/",
+            "https://clivern.com/tools-calling-with-langchain/",
+            "https://clivern.com/langgraph-in-action/",
+            "https://clivern.com/project/gauntlet/",
+            "https://clivern.com/project/cattle/",
+            "https://clivern.com/project/cygnus-x1/",
         ]
     )
 
@@ -51,6 +73,10 @@ def main():
     print()
 
     crawler = Crawler(
+        webbase=Webbase(
+            scraper_url="http://127.0.0.1:8000",
+            api_key="xkey",
+        ),
         timeout=30,
         max_chunk_length=100000,
     )
@@ -68,10 +94,7 @@ def main():
         for i, chunk in enumerate(content_chunks, 1):
             print(f"Content Chunk {i}:")
             print("-" * 80)
-            preview = chunk[:500] if len(chunk) > 500 else chunk
-            print(preview)
-            if len(chunk) > 500:
-                print(f"... (truncated, total length: {len(chunk)} characters)")
+            print(chunk)
             print("-" * 80)
             print()
 

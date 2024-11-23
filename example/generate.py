@@ -25,7 +25,7 @@ def main():
         temperature=0.7,
         base_url="https://api.cohere.ai/compatibility/v1",
         webbase=Webbase(
-            scraper_url="http://64.227.18.224:8000",
+            scraper_url="http://127.0.0.1:8000",
             api_key="xkey",
         ),
     )
