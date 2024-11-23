@@ -7,9 +7,9 @@
 .. image:: https://img.shields.io/pypi/v/zegie.svg
     :alt: PyPI-Server
     :target: https://pypi.org/project/zegie/
-.. image:: https://github.com/Clivern/zegie/actions/workflows/ci.yml/badge.svg
+.. image:: https://github.com/zieeio/zegie/actions/workflows/ci.yml/badge.svg
     :alt: Build Status
-    :target: https://github.com/Clivern/zegie/actions/workflows/ci.yml
+    :target: https://github.com/zieeio/zegie/actions/workflows/ci.yml
 
 |
 
