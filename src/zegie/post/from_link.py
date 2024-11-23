@@ -14,7 +14,7 @@
 
 from typing import Dict, Any
 from langchain_openai import ChatOpenAI
-from langchain_community.document_loaders import WebBaseLoader
+from zegie.scraper import Webbase
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -28,6 +28,7 @@ class PostFromLink:
         model: str = "gpt-5.2",
         temperature: float = 0.7,
         base_url: str = "https://api.openai.com/v1",
+        webbase: Webbase = None,
     ):
         """
         Initialize the PostFromLink.
@@ -45,6 +46,7 @@ class PostFromLink:
             "base_url": base_url,
         }
         self.llm = ChatOpenAI(**kwargs)
+        self.webbase = webbase
 
     def generate(self, url: str, user_prompt: str) -> Dict[str, Any]:
         """
@@ -59,13 +61,10 @@ class PostFromLink:
             Dictionary with 'content' (str) and 'token_usage' (dict with 'prompt_tokens',
             'completion_tokens', 'total_tokens').
         """
-        loader = WebBaseLoader(url)
-        documents = loader.load()
+        content = self.webbase.scrape(url)
 
-        extracted_content = "\n\n".join([doc.page_content for doc in documents])
-
-        if len(extracted_content) > 8000:
-            extracted_content = extracted_content[:8000] + "..."
+        if len(content) > 8000:
+            content = content[:8000] + "..."
 
         prompt = ChatPromptTemplate.from_messages(
             [
@@ -75,7 +74,7 @@ class PostFromLink:
                 HumanMessage(
                     content=f"""Based on the following content extracted from a webpage, follow the user's instructions to create a post.
 Content from webpage:
-{extracted_content}
+{content}
 User Request: {user_prompt}
 Generate the post according to the user's specifications:
 IMPORTANT: Return ONLY the post content itself. Do NOT include any introductory text, explanations, or quotes around the content. Return the post text directly without any wrapper text."""

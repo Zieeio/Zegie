@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .webbase import Webbase
 
-class Crawler:
-    """Crawler to scrape links and extract text content from websites."""
-
-    pass
+__all__ = [
+    "Webbase",
+]

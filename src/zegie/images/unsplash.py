@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-class Crawler:
-    """Crawler to scrape links and extract text content from websites."""
+class Unsplash:
+    """Unsplash image finder."""
 
     pass

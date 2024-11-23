@@ -15,6 +15,7 @@
 import os
 from zegie.post import PostFromLink
 from zegie.post import PostFromTopic
+from zegie.scraper import Webbase
 
 
 def main():
@@ -23,10 +24,14 @@ def main():
         model="command-r7b-12-2024",
         temperature=0.7,
         base_url="https://api.cohere.ai/compatibility/v1",
+        webbase=Webbase(
+            scraper_url="http://64.227.18.224:8000",
+            api_key="xkey",
+        ),
     )
     result = generator_from_link.generate(
-        "https://www.example.com/blog/post-1",
-        "give me a casual post for twitter with a limit 200 characters about .... etc",
+        "https://ziee.io",
+        "give me a casual post for twitter about team plan pricing",
     )
     print(result["content"])
     if result["token_usage"]:
